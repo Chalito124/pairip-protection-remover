@@ -10,16 +10,6 @@ This tool is designed to bypass PairIP protection in Flutter applications by:
 - Removing license check components from the manifest
 - Reconfiguring file paths
 
-## Usage
-
-The tool is straightforward to use with a single command:
-
-```bash
-python3 patch.py app.apks
-```
-
-After processing, you'll get a patched APK file that has PairIP protection removed.
-
 ## Prerequisites
 
 The following tools must be installed and available in your working directory:
@@ -28,6 +18,62 @@ The following tools must be installed and available in your working directory:
 2. **Java Runtime Environment (JRE)**
 3. **APKEditor-1.4.3.jar** - For APK manipulation
 4. **uber-apk-signer.jar** - For signing the patched APK
+
+## Java Installation
+
+### On Linux:
+
+```bash
+# Debian/Ubuntu
+sudo apt update
+sudo apt install default-jre
+
+# Fedora/RHEL
+sudo dnf install java-latest-openjdk
+
+# Verify installation
+java -version
+```
+
+### On Termux (Android):
+
+```bash
+# Install OpenJDK
+pkg update
+pkg install openjdk-17
+
+# Verify installation
+java -version
+```
+
+### Making Java Globally Accessible
+
+1. Add Java to your PATH by adding these lines to your `~/.bashrc` or `~/.zshrc` file:
+
+```bash
+# For typical Linux installations
+export JAVA_HOME=/usr/lib/jvm/default-java
+export PATH=$PATH:$JAVA_HOME/bin
+
+# For Termux
+export JAVA_HOME=/data/data/com.termux/files/usr/opt/openjdk
+export PATH=$PATH:$JAVA_HOME/bin
+```
+
+2. Apply the changes:
+
+```bash
+source ~/.bashrc
+# or
+source ~/.zshrc
+```
+
+3. Verify Java is in your PATH:
+
+```bash
+which java
+java -version
+```
 
 ## Installation
 
@@ -42,6 +88,16 @@ wget https://github.com/patrickfav/uber-apk-signer/releases/download/v1.2.1/uber
 chmod +x patch.py
 ```
 
+## Usage
+
+The tool is straightforward to use with a single command:
+
+```bash
+python3 patch.py app.apks
+```
+
+After processing, you'll get a patched APK file that has PairIP protection removed.
+
 ## How It Works
 
 The script performs the following operations:
@@ -53,82 +109,50 @@ The script performs the following operations:
 
 After completion, the script will create a patched APK with the same name as the input APKS file but with "-patched" added to the filename.
 
-## Detailed Process Explanation
+## Technical Summary
 
-The script performs these operations in sequence:
+The script targets specific PairIP protection mechanisms:
 
-1. **Extraction**: Unpacks `base.apk` from the `.apks` file
-2. **Library Setup**: Copies `base.apk` to `libFirebaseCppApp.so`
-3. **APK Merging**: Creates a merged APK with native libraries
-4. **Decompilation**: Decompiles the APK for patching
-5. **Manifest Modification**: Removes license check components
-6. **Smali Patching**:
-   - Updates `VMRunner.smali` to modify library loading
-   - Modifies `SignatureCheck.smali` to bypass integrity checks
-7. **Library Injection**: Copies required `.so` files
-8. **Path Configuration**: Updates file path XML entries
-9. **Rebuilding**: Reassembles the modified files into a new APK
-10. **Signing**: Signs the APK for installation
+1. **Library Modifications**: Replaces key native libraries
+2. **VM Runner Patching**: Changes how libraries are loaded
+3. **Signature Check Bypass**: Disables integrity verification
+4. **Manifest Cleaning**: Removes license verification components
+5. **Path Modifications**: Updates file access configurations
 
 ## Troubleshooting
 
-### Common Issues:
+### Java Not Found
+If you get an error like "java: command not found", ensure Java is properly installed and in your PATH:
 
-#### JAR files not found
-```
-Error: Required JAR file 'APKEditor-1.4.3.jar' not found in the current directory
-```
-**Solution**: Make sure to download all required JAR files to the same directory as the script.
+```bash
+# Check if Java is installed
+java -version
 
-#### Missing libraries
-```
-Error: Missing files in current directory: libpairipcorex.so, libFirebaseCppApp.so
-```
-**Solution**: Run the script once to generate these files, then run it again.
-
-#### No signed APK found
-```
-Warning: No signed APK found in the output directory
-```
-**Solution**: Check if the uber-apk-signer.jar is properly working. The script will attempt to use the unsigned APK as a fallback.
-
-#### Permission denied on Linux/macOS
-```
-Permission denied: 'patch.py'
-```
-**Solution**: Run `chmod +x patch.py` to make the script executable.
-
-## Technical Details
-
-### Target Modifications
-
-- **Library Loading**: Modifies how native libraries are loaded
-- **Signature Verification**: Bypasses app signature integrity checks
-- **License Activity**: Removes license check activities from manifest
-- **Content Provider**: Removes license content provider from manifest
-- **File Paths**: Updates file path configuration for external storage access
-
-### File Structure
-
-```
-/
-├── patch.py                  # Main script
-├── APKEditor-1.4.3.jar       # Required tool
-├── uber-apk-signer.jar       # Required tool
-├── your_app.apks             # Input file
-├── libFirebaseCppApp.so      # Generated library
-├── libpairipcorex.so         # Generated library
-└── your_app-patched.apk      # Output file
+# If not found, install Java and add to PATH as described above
 ```
 
-## Security Considerations
+### Insufficient Java Memory
+For large APKs, increase Java's memory allocation:
 
-This tool is intended for educational and research purposes only. Use it responsibly and only on applications you own or have permission to modify. Unauthorized modification of proprietary applications may violate terms of service and laws.
+```bash
+export _JAVA_OPTIONS="-Xmx2g"
+```
 
-## License
+### File Permission Issues
+Make sure the script is executable:
 
-This project is provided for educational purposes only. All modifications should respect the original application's licensing terms.
+```bash
+chmod +x patch.py
+```
+
+## Requirements
+
+Place these files in the same directory:
+- patch.py
+- APKEditor-1.4.3.jar
+- uber-apk-signer.jar
+- libpairipcorex.so
 
 ## Disclaimer
 
-The developers of this tool are not responsible for any misuse, damage, or legal issues arising from the use of this software. Use at your own risk and only on applications you have the right to modify.
+This tool is provided for educational and research purposes only. Use it responsibly and only on applications you own or have permission to modify.
