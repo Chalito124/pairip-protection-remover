@@ -2,7 +2,7 @@
 
 [![GitHub stars](https://img.shields.io/github/stars/void-eth/pairip-protection-remover.svg?style=social&label=Star&maxAge=2592000)](https://github.com/void-eth/pairip-protection-remover/stargazers/)
 [![License](https://img.shields.io/github/license/void-eth/pairip-protection-remover.svg)](https://github.com/void-eth/pairip-protection-remover/blob/main/LICENSE)
-[![Release](https://img.shields.io/github/release/void-eth/pairip-protection-remover.svg)](https://github.com/void-eth/pairip-protection-remover/archive/refs/heads/main.zip)
+[![Release](https://img.shields.io/github/release/void-eth/pairip-protection-remover.svg)](https://github.com/void-eth/pairip-protection-remover/releases/)
 
 A simple, cross-platform tool for bypassing Google's PairIP protection in Flutter applications. Available in both Python and Bash versions.
 
@@ -48,7 +48,7 @@ When an app with PairIP protection is modified, it typically crashes immediately
 ### Python Version Installation
 
 #### Windows:
-1. Download the latest release from the [releases page](https://github.com/void-eth/pairip-protection-remover/archive/refs/heads/main.zip)
+1. Download the latest release from the [releases page](https://github.com/void-eth/pairip-protection-remover/releases)
 2. Extract the ZIP file to a directory of your choice
 3. Ensure you have Python installed:
    ```
@@ -64,7 +64,7 @@ When an app with PairIP protection is modified, it typically crashes immediately
    If Java is not installed, download and install it from [Oracle Java](https://www.oracle.com/java/technologies/javase-jre8-downloads.html) or [OpenJDK](https://adoptopenjdk.net/)
 
 #### Linux/macOS:
-1. Download the latest release from the [releases page](https://github.com/void-eth/pairip-protection-remover/archive/refs/heads/main.zip)
+1. Download the latest release from the [releases page](https://github.com/void-eth/pairip-protection-remover/releases)
 2. Extract the archive:
    ```bash
    unzip pairip-protection-remover-*.zip
@@ -101,7 +101,7 @@ When an app with PairIP protection is modified, it typically crashes immediately
 ### Bash Version Installation
 
 #### Linux/macOS:
-1. Download the latest release from the [releases page](https://github.com/void-eth/pairip-protection-remover/archive/refs/heads/main.zip)
+1. Download the latest release from the [releases page](https://github.com/void-eth/pairip-protection-remover/releases)
 2. Extract the archive:
    ```bash
    unzip pairip-protection-remover-*.zip
