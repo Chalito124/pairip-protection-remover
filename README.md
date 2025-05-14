@@ -1,253 +1,230 @@
 # PairIP Protection Remover
 
-A specialized tool for removing PairIP protection from Flutter applications packaged as `.apks` files. This script automates patching operations to bypass Google's PairIP protection mechanism.
+[![GitHub stars](https://img.shields.io/github/stars/void-eth/pairip-protection-remover.svg?style=social&label=Star&maxAge=2592000)](https://github.com/void-eth/pairip-protection-remover/stargazers/)
+[![License](https://img.shields.io/github/license/void-eth/pairip-protection-remover.svg)](https://github.com/void-eth/pairip-protection-remover/blob/main/LICENSE)
+[![Release](https://img.shields.io/github/release/void-eth/pairip-protection-remover.svg)](https://github.com/void-eth/pairip-protection-remover/archive/refs/heads/main.zip)
 
-## Required Files
+A simple, cross-platform tool for bypassing Google's PairIP protection in Flutter applications. Available in both Python and Bash versions.
 
-Your working directory **must** contain these exact files:
-- `patch.py` - The main Python script
-- `APKEditor-1.4.3.jar` - For APK manipulation
-- `uber-apk-signer.jar` - For signing the patched APK
-- `libpairipcorex.so` - Essential library file for patching
+## What is PairIP Protection?
 
-The script will fail if any of these files are missing. The `libpairipcorex.so` file included in this repository is critical and cannot be substituted.
+PairIP is Google's app protection system that implements multiple layers of security checks:
+- Signature verification
+- License verification
+- Integrity checks
+- Runtime protection measures
 
-## Installation Instructions
+When an app with PairIP protection is modified, it typically crashes immediately or exhibits black screens. This occurs because the protection detects changes to the app and prevents execution.
 
-### Windows
+## Features
 
-1. **Install Python 3**:
-   - Download from [python.org](https://www.python.org/downloads/windows/)
-   - **Important**: Check "Add Python to PATH" during installation
-   - Verify in Command Prompt: `python --version`
+- **Cross-Platform**: Works on Windows, macOS, and Linux
+- **Easy to Use**: Simple command-line interface
+- **Automatic Processing**: Handles all the steps required to remove PairIP protection
+- **Multiple Patches**: Modifies various components including:
+  - `VMRunner.smali` to bypass runtime VM checks
+  - `SignatureCheck.smali` to bypass integrity verification
+  - `AndroidManifest.xml` to remove license checks
+  - `file_paths.xml` to fix external storage access issues
+- **Automatic Cleanup**: Removes temporary files after processing
 
-2. **Install Java JRE**:
-   - Download from [Oracle](https://www.java.com/en/download/) or [AdoptOpenJDK](https://adoptopenjdk.net/)
-   - Add to PATH:
-     ```
-     setx JAVA_HOME "C:\Program Files\Java\jre-xx.x.x"
-     setx PATH "%PATH%;%JAVA_HOME%\bin"
-     ```
-   - Verify: `java -version`
+## Requirements
 
-3. **Install unzip utility**:
-   - Download and install [7-Zip](https://www.7-zip.org/download.html)
-   - Add to PATH or use full path when executing the script
+### For Python Version:
+- Python 3.6 or higher
+- Java Runtime Environment (JRE) 8 or higher
 
-4. **Download required files**:
-   - Download all four required files to the same directory
-   - Ensure the files have the exact names listed above
+### For Bash Version:
+- Bash shell (available by default on Linux/macOS, requires installation on Windows)
+- Java Runtime Environment (JRE) 8 or higher
+- Common UNIX tools: `unzip`, `zip`, `basename`, `dirname`, `realpath`
 
-### Ubuntu/Debian
+### Common Requirements (both versions):
+- `APKEditor-1.4.3.jar` (included in release)
+- `uber-apk-signer.jar` (included in release)
 
-```bash
-# Install required packages
-sudo apt update
-sudo apt install -y python3 python3-pip default-jre unzip
+## Installation
 
-# Create a working directory
-mkdir pairip-remover
-cd pairip-remover
+### Python Version Installation
 
-# Download required tools
-wget https://github.com/REAndroid/APKEditor/releases/download/1.4.3/APKEditor-1.4.3.jar
-wget https://github.com/patrickfav/uber-apk-signer/releases/download/v1.2.1/uber-apk-signer-1.2.1.jar
+#### Windows:
+1. Download the latest release from the [releases page](https://github.com/void-eth/pairip-protection-remover/archive/refs/heads/main.zip)
+2. Extract the ZIP file to a directory of your choice
+3. Ensure you have Python installed:
+   ```
+   # Check Python version
+   python --version
+   ```
+   If Python is not installed, download and install it from [python.org](https://www.python.org/downloads/)
+4. Ensure you have Java installed:
+   ```
+   # Check Java version
+   java -version
+   ```
+   If Java is not installed, download and install it from [Oracle Java](https://www.oracle.com/java/technologies/javase-jre8-downloads.html) or [OpenJDK](https://adoptopenjdk.net/)
 
-# Download the patch script and libpairipcorex.so from this repository
-wget https://raw.githubusercontent.com/void-eth/pairip-protection-remover/main/patch.py
-wget https://raw.githubusercontent.com/void-eth/pairip-protection-remover/main/libpairipcorex.so
+#### Linux/macOS:
+1. Download the latest release from the [releases page](https://github.com/void-eth/pairip-protection-remover/archive/refs/heads/main.zip)
+2. Extract the archive:
+   ```bash
+   unzip pairip-protection-remover-*.zip
+   # OR
+   tar -xzvf pairip-protection-remover-*.tar.gz
+   ```
+3. Ensure you have Python installed:
+   ```bash
+   # Check Python version
+   python3 --version
+   ```
+   If Python is not installed, install it using your package manager:
+   ```bash
+   # For Debian/Ubuntu
+   sudo apt-get install python3 python3-pip
+   
+   # For macOS with Homebrew
+   brew install python3
+   ```
+4. Ensure you have Java installed:
+   ```bash
+   # Check Java version
+   java -version
+   ```
+   If Java is not installed, install it using your package manager:
+   ```bash
+   # For Debian/Ubuntu
+   sudo apt-get install default-jre
+   
+   # For macOS with Homebrew
+   brew install --cask adoptopenjdk
+   ```
 
-# Make the script executable
-chmod +x patch.py
-```
+### Bash Version Installation
 
-### Fedora/RHEL/CentOS
+#### Linux/macOS:
+1. Download the latest release from the [releases page](https://github.com/void-eth/pairip-protection-remover/archive/refs/heads/main.zip)
+2. Extract the archive:
+   ```bash
+   unzip pairip-protection-remover-*.zip
+   # OR
+   tar -xzvf pairip-protection-remover-*.tar.gz
+   ```
+3. Make the script executable:
+   ```bash
+   chmod +x patch.sh
+   ```
+4. Ensure you have Java installed:
+   ```bash
+   # Check Java version
+   java -version
+   ```
+   If Java is not installed, install it using your package manager:
+   ```bash
+   # For Debian/Ubuntu
+   sudo apt-get install default-jre
+   
+   # For macOS with Homebrew
+   brew install --cask adoptopenjdk
+   ```
+5. Ensure required tools are installed:
+   ```bash
+   # For Debian/Ubuntu
+   sudo apt-get install unzip zip
+   
+   # For macOS with Homebrew
+   brew install coreutils
+   ```
 
-```bash
-# Install required packages
-sudo dnf install -y python3 python3-pip java-latest-openjdk unzip
-
-# Follow the same steps as Ubuntu/Debian for downloading the required files
-```
-
-### macOS
-
-```bash
-# Install Homebrew if needed
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# Install required packages
-brew install python openjdk unzip
-
-# Add Java to PATH
-echo 'export JAVA_HOME=$(/usr/libexec/java_home)' >> ~/.zshrc
-echo 'export PATH=$PATH:$JAVA_HOME/bin' >> ~/.zshrc
-source ~/.zshrc
-
-# Download required files (same as Ubuntu/Debian)
-```
-
-### Android (via Termux)
-
-```bash
-# Install required packages
-pkg update
-pkg install -y python openjdk-17 unzip wget
-
-# Allow storage access
-termux-setup-storage
-
-# Create working directory
-mkdir pairip-remover
-cd pairip-remover
-
-# Download required tools and files
-wget https://github.com/REAndroid/APKEditor/releases/download/1.4.3/APKEditor-1.4.3.jar
-wget https://github.com/patrickfav/uber-apk-signer/releases/download/v1.2.1/uber-apk-signer-1.2.1.jar
-wget https://raw.githubusercontent.com/void-eth/pairip-protection-remover/main/patch.py
-wget https://raw.githubusercontent.com/void-eth/pairip-protection-remover/main/libpairipcorex.so
-
-# Make script executable
-chmod +x patch.py
-```
+#### Windows (using WSL):
+1. Install Windows Subsystem for Linux (WSL) by following the [official guide](https://docs.microsoft.com/en-us/windows/wsl/install)
+2. Open WSL terminal and follow the Linux installation steps above
 
 ## Usage
 
-The script requires a `.apks` file as input:
+### Python Version
 
 ```bash
 # On Windows
-python patch.py your_app.apks
+python patch_new.py your_app.apks
 
-# On Linux/macOS/Termux
-python3 patch.py your_app.apks
+# On Linux/macOS
+python3 patch_new.py your_app.apks
+```
+
+### Bash Version
+
+```bash
+# On Linux/macOS
+./patch.sh your_app.apks
+
+# On Windows with WSL
+bash patch.sh your_app.apks
 ```
 
 ## How It Works
 
-The script performs these operations:
+The PairIP Protection Remover works by performing the following steps:
 
-1. **Extraction**: Unpacks `base.apk` from the `.apks` file
-2. **Library Setup**: Creates `libFirebaseCppApp.so` from `base.apk`
-3. **APK Merging**: Creates a merged APK with native libraries enabled
-4. **Decompilation**: Decompiles the APK for patching
-5. **Manifest Modification**: Removes license check components using regex patterns
-6. **Smali Patching**:
-   - Replaces the `<clinit>` method in `VMRunner.smali` to modify library loading
-   - Modifies `SignatureCheck.smali` to add an early return, bypassing integrity checks
-7. **Library Injection**: Copies `libpairipcorex.so` and `libFirebaseCppApp.so` to architecture directories
-8. **File Path Patching**: Updates external path entries in XML files
-9. **Rebuilding**: Reassembles the modified files into a new APK
-10. **Signing**: Signs the APK for installation
+1. **Extract base.apk**: Extracts the base APK from the APKS bundle
+2. **Create libFirebaseCppApp.so**: Creates a modified native library
+3. **Merge APKS to APK**: Merges the split APK files into a single APK
+4. **Decompile the APK**: Decompiles the merged APK to access its code
+5. **Modify AndroidManifest.xml**: Removes license check components
+6. **Patch VMRunner.smali**: Replaces the `clinit()` method to bypass VM checks
+7. **Patch SignatureCheck.smali**: Modifies integrity verification checks
+8. **Copy Modified Native Libraries**: Replaces the original libraries with patched versions
+9. **Patch file_paths.xml**: Updates external storage access configuration
+10. **Rebuild and Sign**: Recompiles and signs the modified APK
 
-## Modifications Made by the Script
+## Common Issues and Troubleshooting
 
-### VMRunner Patching
+### Java Issues
+- **Error**: `java: command not found` or `Java not found`
+  - **Solution**: Install Java Runtime Environment (JRE) 8 or higher
 
-Replaces the `<clinit>` method to load our custom libraries:
+### Python Issues
+- **Error**: `ModuleNotFoundError: No module named 'colorama'`
+  - **Solution**: The script should auto-install dependencies, but you can manually install them with:
+    ```bash
+    pip install colorama tqdm
+    ```
 
-```smali
-.method static constructor <clinit>()V
-    .registers 1
+### JAR File Issues
+- **Error**: `Required JAR file 'APKEditor-1.4.3.jar' not found`
+  - **Solution**: Ensure the JAR files are in the same directory as the script
 
-    .line 30
-    const-string v0, "pairipcorex"
-    invoke-static {v0}, Ljava/lang/System;->loadLibrary(Ljava/lang/String;)V
+### APK Processing Issues
+- **Error**: `Failed to merge APKS to APK`
+  - **Solution**: Check if the input file is a valid APKS file and if Java has enough memory
 
-    const-string v0, "pairipcore"
-    invoke-static {v0}, Ljava/lang/System;->loadLibrary(Ljava/lang/String;)V
+## Advanced Usage
 
-    return-void
-.end method
-```
+### Creating Custom Patched Native Libraries
 
-### SignatureCheck Bypassing
+For advanced users who want to create custom patched versions of the native libraries:
 
-Adds an early return to the integrity verification method:
+1. Extract the original `libpairipcore.so` from your app
+2. Use a tool like Ghidra or IDA Pro to analyze and modify the library
+3. Replace the default library with your custom version in the script directory
 
-```smali
-.method public static verifyIntegrity(Landroid/content/Context;)V
-    # Method annotations
-    .end annotation
-    return-void  # Early return added here to skip the entire verification
-```
+## Contributing
 
-### AndroidManifest Cleaning
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-Removes these components using regex:
-- `<activity android:name="com.pairip.licensecheck.LicenseActivity" ... />`
-- `<provider android:name="com.pairip.licensecheck.LicenseContentProvider" ... />`
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-### File Path Modifications
+## License
 
-Changes external path entries:
-```xml
-<!-- From -->
-<external-path name="..." path="Android/data/package.name/files/Pictures" />
-
-<!-- To -->
-<external-files-path name="my_images" path="Pictures/" />
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **"Missing files in current directory"**
-   - Ensure `libpairipcorex.so` and all required JAR files are in the same directory as the script
-   - The filenames must be exactly as expected: `APKEditor-1.4.3.jar`, `uber-apk-signer.jar`, and `libpairipcorex.so`
-
-2. **Java-related errors**
-   - Verify Java is installed: `java -version`
-   - Make sure Java is in your PATH
-   - For large APKs, increase Java memory: 
-     ```
-     # Windows
-     set _JAVA_OPTIONS=-Xmx2g
-     
-     # Linux/macOS/Termux
-     export _JAVA_OPTIONS="-Xmx2g"
-     ```
-
-3. **"unzip: command not found"**
-   - Install unzip utility for your platform
-   - For Windows, install 7-Zip and ensure it's in your PATH
-
-4. **"Could not find any signed APK"**
-   - The script will try to use fallback options
-   - If signing fails completely, try running the signing step manually:
-     ```
-     java -jar uber-apk-signer.jar -a out.apk
-     ```
-
-5. **Permission Denied**
-   - Make the script executable: `chmod +x patch.py`
-   - On Windows, run Command Prompt as Administrator
-
-### Platform-Specific Issues
-
-#### Windows
-- If PowerShell blocks execution, run: `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`
-- Use double quotes in paths that contain spaces
-
-#### Termux
-- If you get "Bad system call", try: `termux-change-repo` to switch repositories
-- Ensure you've run `termux-setup-storage` if accessing files from shared storage
-
-## Memory Considerations
-
-This process can be memory-intensive, especially for large APKs. If you encounter memory errors:
-
-1. Close other applications to free up memory
-2. Increase Java's memory allocation as mentioned above
-3. On Termux, try restarting Termux before running the script
-
-## Final Notes
-
-- The patched APK will be named `[original_name]-patched.apk`
-- The script preserves `libpairipcorex.so` and `libFirebaseCppApp.so` for future runs
-- Always keep a backup of your original `.apks` file
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Disclaimer
 
-This tool is provided for educational and research purposes only. Use it responsibly and only on applications you own or have permission to modify.
+This tool is provided for educational purposes only. Use it at your own risk. The authors are not responsible for any misuse of this tool or any violations of terms of service of any app marketplaces.
+
+## Acknowledgements
+
+- Thanks to all contributors who have helped to improve this tool
+- Special thanks to the Flutter and Android developer communities
