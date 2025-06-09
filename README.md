@@ -3,7 +3,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/void-eth/pairip-protection-remover.svg?style=social&label=Star&maxAge=2592000)](https://github.com/void-eth/pairip-protection-remover/stargazers/)
 [![License](https://img.shields.io/github/license/void-eth/pairip-protection-remover.svg)](https://github.com/void-eth/pairip-protection-remover/blob/main/LICENSE)
 [![Release](https://img.shields.io/github/release/void-eth/pairip-protection-remover.svg)](https://github.com/void-eth/pairip-protection-remover/releases/)
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/NamasteIndia/pairip-protection-remover/blob/main/pairip.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/NamasteIndia/pairip-protection-remover/blob/main/Pairip.ipynb)
 
 A simple, cross-platform tool for bypassing Google's PairIP protection in Flutter applications. Available in both Python and Bash versions.
 
